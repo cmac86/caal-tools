@@ -2,7 +2,7 @@
 set -e
 
 TOOL_NAME="$1"
-REPO_BASE="https://raw.githubusercontent.com/CoreWorxLab/caal-tools/refs/heads/main"
+REPO_BASE="https://raw.githubusercontent.com/CoreWorxLab/caal-tools/main"
 
 if [ -z "$TOOL_NAME" ]; then
   echo "Usage: install.sh <tool-name>"
