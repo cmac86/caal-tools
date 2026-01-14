@@ -1,0 +1,38 @@
+{
+  "name": "truenas-get-status",
+  "version": "1.0.0",
+  "description": "Get TrueNAS system status including CPU, memory, storage pools, and running apps",
+  "category": "homelab",
+  "voice_triggers": [
+    "what's my TrueNAS status",
+    "how's my NAS doing",
+    "check TrueNAS"
+  ],
+  "required_services": ["truenas"],
+  "required_credentials": [
+    {
+      "node": "HTTP Request",
+      "type": "httpHeaderAuth",
+      "name": "TrueNAS API Key",
+      "description": "API key from TrueNAS (Credentials > API Keys > Add)",
+      "header_name": "Authorization",
+      "header_value_prefix": "Bearer "
+    }
+  ],
+  "required_variables": [
+    {
+      "name": "TRUENAS_URL",
+      "description": "Your TrueNAS instance URL",
+      "example": "http://192.168.1.100"
+    }
+  ],
+  "author": {
+    "github": "cmac",
+    "name": "Chris Mac"
+  },
+  "tier": "community",
+  "tags": ["homelab", "truenas", "nas", "server", "monitoring"],
+  "dependencies": [],
+  "created": "2026-01-14",
+  "updated": "2026-01-14"
+}
