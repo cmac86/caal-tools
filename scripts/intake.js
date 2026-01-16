@@ -395,7 +395,7 @@ ${requiredVariables.map(v => `| \`${v.name}\` | ${v.description} | \`${v.example
   if (validationPassed) {
     console.log(`Validation passed! Next steps:`);
     console.log(`  1. Review the generated files`);
-    console.log(`  2. Create PR: git checkout -b add-${manifest.name} && git add . && git commit -m "feat: add ${manifest.name}" && git push\n`);
+    console.log(`  2. Create PR: git checkout -b add-${manifest.name} && git add . && git commit -m "feat: add ${manifest.name}" && git push -u origin add-${manifest.name}\n`);
   } else {
     console.log(`Validation failed. Please fix the issues above and re-run:`);
     console.log(`  node scripts/validate.js ${toolDir}`);
