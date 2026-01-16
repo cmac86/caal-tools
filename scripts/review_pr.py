@@ -80,13 +80,15 @@ LOG_DIR = "/var/log/caal-tools"
 
 def run_claude_review(pr_info: dict) -> str:
     """Run Claude CLI to review the PR."""
-    prompt = f"""Read {REVIEW_SEED_PATH}
+    prompt = f"""You are reviewing a PR for the CAAL Tool Registry. Follow the instructions in {REVIEW_SEED_PATH} exactly.
 
 PR Number: {pr_info['number']}
 PR Title: {pr_info['title']}
 PR URL: {pr_info['url']}
 Branch: {pr_info['head_ref']}
 Author: {pr_info['user']}
+
+Read the seed file, then immediately execute the review steps. Do not ask for confirmation - just do the review and output the structured response with verdict, fixes, issues, and feedback blocks.
 """
 
     cmd = [
