@@ -1,0 +1,47 @@
+{
+  "name": "truenas-control-app",
+  "version": "1.0.0",
+  "description": "Control TrueNAS apps - start, stop, or restart. Parameters: app_name (required, string - the app name like 'radarr' or 'jellyfin'), action (required, string - 'start', 'stop', or 'restart')",
+  "category": "homelab",
+  "voice_triggers": [
+    "start radarr on truenas\"",
+    "stop homepage app on truenas\""
+  ],
+  "required_services": [
+    "truenas"
+  ],
+  "required_credentials": [
+    {
+      "auth_type": "generic",
+      "credential_type": "httpHeaderAuth",
+      "name": "TRUENAS API Key",
+      "description": "TRUENAS API - Header Auth Credential",
+      "node": "HTTP Request",
+      "header_name": "Authorization"
+    }
+  ],
+  "required_variables": [
+    {
+      "name": "TRUENAS_URL",
+      "description": "Your service URL",
+      "example": "http://192.168.86.245"
+    },
+    {
+      "name": "CAAL_WEBHOOK_URL",
+      "description": "Your service URL",
+      "example": "http://192.168.86.47:8889"
+    }
+  ],
+  "author": {
+    "github": "cmac",
+    "name": "Chris Mac"
+  },
+  "tier": "experimental",
+  "tags": [
+    "homelab",
+    "truenas"
+  ],
+  "dependencies": [],
+  "created": "2026-01-16",
+  "updated": "2026-01-16"
+}
