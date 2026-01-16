@@ -38,6 +38,53 @@ const SECRET_PATTERNS = [
 const URL_PATTERN = /https?:\/\/[\d.]+(?::\d+)?/g;
 const LOCALHOST_PATTERN = /https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?/g;
 
+/**
+ * Recursively find all __rl (resource locator) fields with mode: "list"
+ * These are dropdown selections that need to be converted to id mode
+ */
+function findResourceLocators(obj, path = '', results = []) {
+  if (!obj || typeof obj !== 'object') return results;
+
+  if (obj.__rl === true && obj.mode === 'list') {
+    results.push({
+      path,
+      value: obj.value,
+      cachedName: obj.cachedResultName || obj.cachedResultUrl || null
+    });
+  }
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === 'object' && value !== null) {
+      findResourceLocators(value, path ? `${path}.${key}` : key, results);
+    }
+  }
+
+  return results;
+}
+
+/**
+ * Convert a resource locator from list mode to id mode
+ */
+function convertResourceLocatorToId(obj, variablePlaceholder) {
+  return {
+    __rl: true,
+    mode: 'id',
+    value: variablePlaceholder
+  };
+}
+
+/**
+ * Set a nested property by path (e.g., "nodes.0.parameters.calendar")
+ */
+function setNestedProperty(obj, path, value) {
+  const parts = path.split('.');
+  let current = obj;
+  for (let i = 0; i < parts.length - 1; i++) {
+    current = current[parts[i]];
+  }
+  current[parts[parts.length - 1]] = value;
+}
+
 const CATEGORIES = [
   { key: 'smart-home', label: 'Smart Home', desc: 'Home Assistant, lights, climate, security' },
   { key: 'media', label: 'Media', desc: 'Plex, Jellyfin, Jellyseerr, Sonarr, Radarr' },
@@ -106,7 +153,7 @@ async function main() {
   console.log(`Tool name: ${toolName}\n`);
 
   // Step 1: Check for secrets
-  console.log(`[1/5] Checking for hardcoded secrets...`);
+  console.log(`[1/7] Checking for hardcoded secrets...`);
   const workflowStr = JSON.stringify(workflow);
   const secretFindings = [];
 
@@ -127,7 +174,7 @@ async function main() {
   console.log(`  No secrets detected.\n`);
 
   // Step 2: Detect hardcoded URLs
-  console.log(`[2/5] Detecting hardcoded URLs...`);
+  console.log(`[2/7] Detecting hardcoded URLs...`);
   const urlMatches = workflowStr.match(URL_PATTERN) || [];
   const uniqueUrls = [...new Set(urlMatches)].filter(url => !LOCALHOST_PATTERN.test(url));
 
@@ -151,8 +198,38 @@ async function main() {
     console.log(`  No hardcoded URLs found.\n`);
   }
 
-  // Step 3: Sanitize workflow
-  console.log(`[3/5] Sanitizing workflow...`);
+  // Step 3: Detect resource locators (dropdown selections)
+  console.log(`[3/7] Detecting resource locators (dropdown selections)...`);
+  const resourceLocators = findResourceLocators(workflow);
+  const rlReplacements = {};
+
+  if (resourceLocators.length > 0) {
+    console.log(`\n  Found ${resourceLocators.length} dropdown selection(s) that need parameterizing:\n`);
+
+    for (const rl of resourceLocators) {
+      const fieldName = rl.path.split('.').pop();
+      const displayName = rl.cachedName || rl.value;
+      console.log(`  Field: ${fieldName}`);
+      console.log(`  Current value: ${displayName}`);
+
+      const suggestedVar = fieldName.toUpperCase().replace(/([a-z])([A-Z])/g, '$1_$2');
+      const varName = await question(`  Variable name (Enter to use ${suggestedVar} or type your own): `);
+
+      const finalVar = varName.trim().toUpperCase() || suggestedVar;
+      rlReplacements[rl.path] = {
+        variable: `\${${finalVar}}`,
+        varName: finalVar,
+        originalValue: rl.value,
+        description: `${fieldName} - ${rl.cachedName || 'ID'}`
+      };
+      console.log(`  -> Will replace with \${${finalVar}}\n`);
+    }
+  } else {
+    console.log(`  No dropdown selections found.\n`);
+  }
+
+  // Step 4: Sanitize workflow
+  console.log(`[4/7] Sanitizing workflow...`);
 
   let sanitizedStr = workflowStr;
 
@@ -162,6 +239,16 @@ async function main() {
   }
 
   let sanitized = JSON.parse(sanitizedStr);
+
+  // Apply resource locator replacements (convert list mode to id mode)
+  for (const [path, replacement] of Object.entries(rlReplacements)) {
+    setNestedProperty(sanitized, path, convertResourceLocatorToId({}, replacement.variable));
+  }
+
+  // Strip instanceId from meta (user-specific)
+  if (sanitized.meta) {
+    delete sanitized.meta.instanceId;
+  }
 
   // Nullify credential IDs but keep names
   const credentialTypes = new Set();
@@ -195,12 +282,15 @@ async function main() {
   }
 
   console.log(`  Credential IDs nullified.`);
-  console.log(`  ${Object.keys(urlReplacements).length} URL(s) replaced.\n`);
+  console.log(`  ${Object.keys(urlReplacements).length} URL(s) replaced.`);
+  console.log(`  ${Object.keys(rlReplacements).length} resource locator(s) converted.`);
+  if (sanitized.meta) console.log(`  Instance ID stripped from meta.`);
+  console.log('');
 
-  // Step 4: Generate manifest
-  console.log(`[4/5] Generating manifest...\n`);
+  // Step 5: Generate manifest
+  console.log(`[5/7] Generating manifest...\n`);
 
-  // Build required_variables from replacements
+  // Build required_variables from URL and resource locator replacements
   const requiredVariables = [];
   for (const [url, variable] of Object.entries(urlReplacements)) {
     const varName = variable.replace('${', '').replace('}', '');
@@ -208,6 +298,15 @@ async function main() {
       name: varName,
       description: `Your service URL`,
       example: url
+    });
+  }
+
+  // Add resource locator variables
+  for (const [path, replacement] of Object.entries(rlReplacements)) {
+    requiredVariables.push({
+      name: replacement.varName,
+      description: replacement.description,
+      example: replacement.originalValue
     });
   }
 
@@ -276,6 +375,7 @@ async function main() {
 
   // Prompt for service name
   const servicesInput = await question(`\n  Required services (comma-separated, e.g., truenas, jellyfin): `);
+  const services = servicesInput ? servicesInput.split(',').map(s => s.trim().toLowerCase()).filter(s => s) : [];
 
   const manifest = {
     name: toolName.replace(/_/g, '-'),
@@ -283,7 +383,7 @@ async function main() {
     description: webhookDescription.split('\n')[0] || `${toolName} tool`,
     category: category,
     voice_triggers: [trigger1, trigger2].filter(t => t),
-    required_services: servicesInput ? servicesInput.split(',').map(s => s.trim().toLowerCase()).filter(s => s) : [],
+    required_services: services,
     required_credentials: requiredCredentials,
     required_variables: requiredVariables,
     author: {
@@ -291,14 +391,14 @@ async function main() {
       name: "Chris Mac"
     },
     tier: "experimental",
-    tags: [category, serviceName?.toLowerCase()].filter(Boolean),
+    tags: [category, ...services].filter(Boolean),
     dependencies: [],
     created: new Date().toISOString().split('T')[0],
     updated: new Date().toISOString().split('T')[0]
   };
 
-  // Step 5: Write files
-  console.log(`\n[5/6] Writing files...`);
+  // Step 6: Write files
+  console.log(`\n[6/7] Writing files...`);
 
   const toolDir = path.join(process.cwd(), 'tools', category, toolName.replace(/_/g, '-'));
   fs.mkdirSync(toolDir, { recursive: true });
@@ -332,7 +432,7 @@ ${webhookDescription || 'TODO: Add description'}
 
 ## Requirements
 
-- ${serviceName || 'Service'} instance
+- ${services.length ? services.join(', ') : 'Service'} instance
 - API key for authentication
 
 ## Installation
@@ -365,8 +465,8 @@ ${requiredVariables.map(v => `| \`${v.name}\` | ${v.description} | \`${v.example
   fs.writeFileSync(path.join(toolDir, 'README.md'), readme);
   console.log(`  Created: ${toolDir}/README.md`);
 
-  // Step 6: Run validation automatically
-  console.log(`\n[6/6] Running validation...\n`);
+  // Step 7: Run validation automatically
+  console.log(`\n[7/7] Running validation...\n`);
 
   const { execSync } = require('child_process');
   const scriptsDir = path.dirname(__filename);
