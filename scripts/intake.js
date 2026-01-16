@@ -418,10 +418,6 @@ curl -s https://raw.githubusercontent.com/CoreWorxLab/caal-tools/main/scripts/in
 | Variable | Description | Example |
 |----------|-------------|---------|
 ${requiredVariables.map(v => `| \`${v.name}\` | ${v.description} | \`${v.example}\` |`).join('\n')}
-
-## Example Response
-
-> "TODO: Add example of what CAAL says"
 `;
 
   fs.writeFileSync(path.join(toolDir, 'README.md'), readme);
@@ -457,7 +453,12 @@ ${requiredVariables.map(v => `| \`${v.name}\` | ${v.description} | \`${v.example
   if (validationPassed) {
     console.log(`Validation passed! Next steps:`);
     console.log(`  1. Review the generated files`);
-    console.log(`  2. Create PR: git checkout -b add-${manifest.name} && git add . && git commit -m "feat: add ${manifest.name}" && git push -u origin add-${manifest.name}\n`);
+    console.log(`  2. Create PR:`);
+    console.log(`     git checkout -b add-${manifest.name}`);
+    console.log(`     git add .`);
+    console.log(`     git commit -m "feat: add ${manifest.name}"`);
+    console.log(`     git push -u origin add-${manifest.name}`);
+    console.log(`     gh pr create --title "feat: add ${manifest.name}" --body "Adds ${manifest.name} tool to the registry."\n`);
   } else {
     console.log(`Validation failed. Please fix the issues above and re-run:`);
     console.log(`  node scripts/validate.js ${toolDir}`);
