@@ -10,12 +10,9 @@
   "required_services": [],
   "required_credentials": [
     {
-      "auth_type": "generic",
       "credential_type": "httpHeaderAuth",
-      "name": "Service API Key",
-      "description": "Service API - Header Auth",
-      "node": "HTTP Request",
-      "header_name": "Authorization"
+      "name": "service_api",
+      "description": "Service API key (Header Auth)"
     }
   ],
   "required_variables": [
