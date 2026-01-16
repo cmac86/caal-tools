@@ -4,22 +4,64 @@ Thanks for contributing! This registry grows through community submissions.
 
 ## Submitting a Tool
 
-### 1. Fork and Clone
+### Quick Method (Recommended)
+
+The intake script handles most of the work for you:
+
+```bash
+# 1. Fork and clone
+git clone https://github.com/YOUR_USERNAME/caal-tools
+cd caal-tools
+
+# 2. Export your workflow from n8n (File > Download)
+
+# 3. Run the intake script
+node scripts/intake.js ~/Downloads/my-workflow.json homelab
+
+# 4. Answer the prompts:
+#    - Variable names for any hardcoded URLs
+#    - Voice trigger examples
+#    - Service name
+
+# 5. Review the generated files in tools/<category>/<tool-name>/
+
+# 6. Validate
+node scripts/validate.js tools/homelab/my-tool
+node scripts/check-secrets.js tools/homelab/my-tool/workflow.json
+
+# 7. Submit PR
+git checkout -b add-my-tool
+git add .
+git commit -m "feat: add my-tool"
+git push origin add-my-tool
+```
+
+The intake script will:
+- Detect and replace hardcoded IPs/URLs with variables
+- Nullify credential IDs for portability
+- Extract webhook description
+- Generate manifest.json, workflow.json, and README.md
+- Check for secrets (blocks if found)
+
+### Manual Method (Advanced)
+
+If you prefer full control or the intake script doesn't fit your workflow:
+
+#### 1. Fork and Clone
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/caal-tools
 cd caal-tools
 ```
 
-### 2. Create Your Tool
+#### 2. Create Your Tool Directory
 
 ```bash
-# Pick the right category
 mkdir -p tools/media/my-awesome-tool
 cd tools/media/my-awesome-tool
 ```
 
-### 3. Add Required Files
+#### 3. Add Required Files
 
 Copy from templates:
 
@@ -29,7 +71,7 @@ cp ../../../templates/manifest-template.json manifest.json
 cp ../../../templates/readme-template.md README.md
 ```
 
-### 4. Build Your Workflow
+#### 4. Build Your Workflow
 
 1. Create and test your workflow in n8n
 2. Export the workflow JSON
@@ -48,7 +90,7 @@ Parameters:
 - symbol (string, required): Stock ticker symbol (e.g., AAPL, GOOGL)
 ```
 
-### 5. Fill Out the Manifest
+#### 5. Fill Out the Manifest
 
 Update `manifest.json` with:
 
@@ -64,7 +106,7 @@ Update `manifest.json` with:
 | `author` | Your GitHub username |
 | `tags` | Searchable keywords |
 
-### Credential Schema
+#### Credential Schema
 
 Each credential in `required_credentials` must specify:
 
@@ -97,21 +139,21 @@ Example for generic header auth:
 }
 ```
 
-### 6. Write the README
+#### 6. Write the README
 
 - Show example voice triggers
 - Explain what the tool does
 - List requirements
 - Include an example of what CAAL says in response
 
-### 7. Validate Locally
+#### 7. Validate Locally
 
 ```bash
 node scripts/validate.js tools/media/my-awesome-tool
 node scripts/check-secrets.js tools/media/my-awesome-tool/workflow.json
 ```
 
-### 8. Submit PR
+#### 8. Submit PR
 
 ```bash
 git checkout -b add-my-awesome-tool
