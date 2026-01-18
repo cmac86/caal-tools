@@ -6,12 +6,13 @@
  * Usage: node scripts/intake.js <workflow.json> [category] [tool-name]
  *
  * This script will:
- * 1. Check for hardcoded secrets
+ * 1. Check for hardcoded secrets (workflow JSON, code nodes, expressions)
  * 2. Detect and prompt for URL replacements (convert to variables)
- * 3. Nullify credential IDs (keep names for reference)
- * 4. Extract webhook description
- * 5. Generate manifest.json and README.md templates
- * 6. Place files in tools/<category>/<tool-name>/
+ * 3. Parameterize credentials (strip names, replace with ${CREDENTIAL} variables)
+ * 4. Strip instance-specific fields (id, versionId, meta, tags)
+ * 5. Extract webhook description
+ * 6. Generate manifest.json and README.md templates
+ * 7. Place files in tools/<category>/<tool-name>/
  */
 
 const fs = require('fs');
@@ -185,10 +186,40 @@ async function main() {
     }
   }
 
+  // Check code nodes for secrets
+  const codeNodeSecretFindings = [];
+  if (workflow.nodes) {
+    for (const node of workflow.nodes) {
+      if (node.type === 'n8n-nodes-base.code') {
+        const codeContent = node.parameters?.jsCode || node.parameters?.pythonCode || '';
+        if (codeContent) {
+          for (const { name, regex } of SECRET_PATTERNS) {
+            regex.lastIndex = 0;
+            if (regex.test(codeContent)) {
+              if (!codeNodeSecretFindings.includes(name)) {
+                codeNodeSecretFindings.push(name);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   if (secretFindings.length > 0) {
     console.error(`\n  BLOCKED: Found hardcoded secrets:`);
     secretFindings.forEach(s => console.error(`    - ${s}`));
     console.error(`\n  Please configure these as n8n Credentials in your workflow and re-export.`);
+    console.error(`  Learn more: https://docs.n8n.io/credentials/\n`);
+    rl.close();
+    process.exit(1);
+  }
+
+  if (codeNodeSecretFindings.length > 0) {
+    console.error(`\n  BLOCKED: Found hardcoded secrets in code nodes:`);
+    codeNodeSecretFindings.forEach(s => console.error(`    - ${s}`));
+    console.error(`\n  Please remove hardcoded secrets from your JavaScript/Python code.`);
+    console.error(`  Use n8n Credentials or expressions to reference secrets instead.`);
     console.error(`  Learn more: https://docs.n8n.io/credentials/\n`);
     rl.close();
     process.exit(1);
@@ -278,26 +309,41 @@ async function main() {
     setNestedProperty(sanitized, path, convertResourceLocatorToId({}, replacement.variable));
   }
 
-  // Strip instanceId from meta (user-specific)
-  if (sanitized.meta) {
-    delete sanitized.meta.instanceId;
-  }
-
-  // Nullify credential IDs but keep names
+  // Parameterize credentials (nullify IDs and replace names with variables)
   const credentialTypes = new Set();
+  const credentialVariables = new Map(); // credType -> varName
 
   sanitized.nodes = sanitized.nodes.map(node => {
     if (node.credentials) {
       for (const [credType, credInfo] of Object.entries(node.credentials)) {
         credentialTypes.add(credType);
+
+        // Generate variable name from credential type
+        // e.g., googleCalendarOAuth2Api -> GOOGLE_CALENDAR_OAUTH2_API_CREDENTIAL
+        const varName = credType
+          .replace(/([a-z])([A-Z])/g, '$1_$2')
+          .toUpperCase() + '_CREDENTIAL';
+
+        credentialVariables.set(credType, varName);
+
+        // Parameterize the credential (strip original name completely)
         node.credentials[credType] = {
           id: null,
-          name: credInfo.name || `${toolName}_credential`
+          name: `\${${varName}}`
         };
       }
     }
     return node;
   });
+
+  // Strip all instance-specific and read-only fields
+  // Only keep what's needed to recreate the workflow
+  sanitized = {
+    name: sanitized.name,
+    nodes: sanitized.nodes,
+    connections: sanitized.connections,
+    settings: sanitized.settings || {}
+  };
 
   // Extract webhook info
   const webhookNode = sanitized.nodes.find(n =>
@@ -318,24 +364,17 @@ async function main() {
   if (credentialTypes.size > 0) {
     console.log(`\n  Found ${credentialTypes.size} credential type(s):`);
     for (const credType of credentialTypes) {
-      // Find the credential name from the workflow
-      let credName = null;
-      for (const node of sanitized.nodes) {
-        if (node.credentials?.[credType]?.name) {
-          credName = node.credentials[credType].name;
-          break;
-        }
-      }
-      console.log(`    ✓ ${credType}${credName ? ` (${credName})` : ''}`);
+      const varName = credentialVariables.get(credType);
+      console.log(`    ✓ ${credType} → \${${varName}}`);
     }
-    console.log(`  Credential IDs will be nullified.`);
+    console.log(`  Credential names parameterized (original names stripped for privacy).`);
   } else {
     console.log(`  No credentials found.`);
   }
 
   console.log(`  ${Object.keys(urlReplacements).length} URL(s) replaced.`);
   console.log(`  ${Object.keys(rlReplacements).length} resource locator(s) converted.`);
-  if (sanitized.meta) console.log(`  Instance ID stripped from meta.`);
+  console.log(`  Instance-specific fields stripped (id, versionId, meta, tags).`);
   console.log('');
 
   // Step 5: Generate manifest
@@ -365,19 +404,12 @@ async function main() {
   const requiredCredentials = [];
 
   for (const credType of credentialTypes) {
-    // Find the credential name from the workflow
-    let credName = null;
-    for (const node of sanitized.nodes) {
-      if (node.credentials?.[credType]?.name) {
-        credName = node.credentials[credType].name;
-        break;
-      }
-    }
+    const varName = credentialVariables.get(credType);
 
     requiredCredentials.push({
       credential_type: credType,
-      name: credName || credType,
-      description: `n8n credential type: ${credType}`
+      name: varName,
+      description: `Your ${credType} credential name in n8n`
     });
   }
 
@@ -468,16 +500,25 @@ curl -s https://raw.githubusercontent.com/CoreWorxLab/caal-tools/main/scripts/in
 ### Manual
 
 1. Download \`workflow.json\`
-2. Import into n8n (Settings > Import from File)
-3. Create credential "${requiredCredentials[0]?.name || 'API Key'}"
-4. Update service URL: \`${requiredVariables[0]?.name || 'SERVICE_URL'}\`
-5. Activate the workflow
+2. Import into n8n (Settings > Import from File)${requiredCredentials.length > 0 ? `
+3. Configure credentials (see Configuration section below)` : ''}${requiredVariables.length > 0 ? `
+${requiredCredentials.length > 0 ? '4' : '3'}. Update variables (see Configuration section below)` : ''}
+${requiredCredentials.length > 0 || requiredVariables.length > 0 ? (requiredCredentials.length > 0 && requiredVariables.length > 0 ? '5' : '4') : '3'}. Activate the workflow
 
 ## Configuration
+${requiredCredentials.length > 0 ? `
+### Credentials
+
+| Credential Type | Description |
+|----------------|-------------|
+${requiredCredentials.map(c => `| \`${c.credential_type}\` | ${c.description} |`).join('\n')}
+` : ''}${requiredVariables.length > 0 ? `
+### Variables
 
 | Variable | Description | Example |
 |----------|-------------|---------|
 ${requiredVariables.map(v => `| \`${v.name}\` | ${v.description} | \`${v.example}\` |`).join('\n')}
+` : ''}
 `;
 
   fs.writeFileSync(path.join(toolDir, 'README.md'), readme);
