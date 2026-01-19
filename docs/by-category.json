@@ -1,6 +1,28 @@
 {
   "homelab": [
     {
+      "id": "q4Ib8fi2X__AxW72u3C4Uw",
+      "name": "truenas-control-app",
+      "version": "1.0.0",
+      "description": "Starts, stops, or restarts a TrueNAS app and polls for completion status.",
+      "category": "homelab",
+      "path": "tools/homelab/truenas-control-app",
+      "voice_triggers": [
+        "Restart Radarr",
+        "Stop Jellyfin"
+      ],
+      "required_services": [
+        "truenas"
+      ],
+      "tier": "coreworxlab",
+      "author": "cmac86",
+      "tags": [
+        "homelab",
+        "truenas"
+      ],
+      "updated": "2026-01-19"
+    },
+    {
       "id": "k5GzHnfCQzMoajwKyg4iWA",
       "name": "truenas-get-status",
       "version": "1.0.0",
