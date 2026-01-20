@@ -44,5 +44,29 @@
       ],
       "updated": "2026-01-19"
     }
+  ],
+  "google tasks": [
+    {
+      "id": "unNGy4Z4eRfgicmlcgbvDg",
+      "name": "google-tasks-add-task",
+      "version": "1.0.0",
+      "description": "Adds a task to Google Tasks with optional notes and due date.",
+      "category": "productivity",
+      "path": "tools/productivity/google-tasks-add-task",
+      "voice_triggers": [
+        "Add task buy groceries",
+        "Remind me to submit the report by Friday"
+      ],
+      "required_services": [
+        "google tasks"
+      ],
+      "tier": "coreworxlab",
+      "author": "cmac86",
+      "tags": [
+        "productivity",
+        "google tasks"
+      ],
+      "updated": "2026-01-20"
+    }
   ]
 }
