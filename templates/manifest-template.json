@@ -19,7 +19,8 @@
     {
       "name": "SERVICE_URL",
       "description": "Your service instance URL",
-      "example": "http://192.168.1.50:8080"
+      "example": "http://192.168.1.50:8080",
+      "hint": "Find in your browser address bar when accessing the service"
     }
   ],
   "author": {

@@ -132,6 +132,36 @@ Example for header auth:
 }
 ```
 
+#### Parameterization Notes (Recommended)
+
+To help users configure your tool during installation, add guidance notes to nodes with user-specific values. This creates helper text that appears below input fields in the install modal.
+
+**Format:**
+```
+PARAMETERIZE:
+- fieldName: Brief description of what this value is
+  Find: Where to locate this value in the service's UI
+  Default: "optional default" (if applicable)
+```
+
+**Example:** For a Notion node requiring a database ID:
+```
+PARAMETERIZE:
+- databaseId: Your Notion task database
+  Find: In URL when viewing database (notion.so/{workspace}/{DATABASE_ID}?v=...)
+```
+
+This results in the install modal showing:
+- **Label:** "Your Notion task database"
+- **Placeholder:** Example database ID
+- **Helper text:** "In URL when viewing database (notion.so/{workspace}/{DATABASE_ID}?v=...)"
+
+**What to Document:**
+- Database/calendar/project IDs
+- API endpoints with user-specific paths
+- Resource identifiers from dropdown selections (`__rl` fields)
+- Any value that varies per user's setup
+
 #### 6. Write the README
 
 - Show example voice triggers
