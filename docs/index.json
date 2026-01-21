@@ -19,35 +19,45 @@
     "updated": "2026-01-19"
   },
   {
-    "id": null,
-    "name": "truenas_get_pool_status",
+    "id": "maQe-hL4vMdtSbYydDiGYg",
+    "name": "espn-get-nhl-schedule",
     "version": "1.0.0",
-    "description": "Get detailed ZFS pool status including health, capacity, and usage percentage for all pools",
-    "category": "homelab",
-    "path": "tools/homelab/truenas-get-pool-status",
+    "description": "Gets upcoming NHL games for a specified team with dates and opponents.",
+    "category": "sports",
+    "path": "tools/sports/espn-get-nhl-schedule",
     "voice_triggers": [
-      "check my TrueNAS pools",
-      "what's the status of my storage pools",
-      "how full are my ZFS pools",
-      "is my TrueNAS healthy",
-      "check storage capacity"
+      "When do the Canucks play next?",
+      "What's the Maple Leafs schedule?"
+    ],
+    "required_services": [],
+    "tier": "coreworxlab",
+    "author": "cmac86",
+    "tags": [
+      "sports"
+    ],
+    "updated": "2026-01-21"
+  },
+  {
+    "id": "unNGy4Z4eRfgicmlcgbvDg",
+    "name": "google-tasks-add-task",
+    "version": "1.0.0",
+    "description": "Adds a task to Google Tasks with optional notes and due date.",
+    "category": "productivity",
+    "path": "tools/productivity/google-tasks-add-task",
+    "voice_triggers": [
+      "Add task buy groceries",
+      "Remind me to submit the report by Friday"
     ],
     "required_services": [
-      {
-        "name": "TrueNAS SCALE",
-        "url": "https://www.truenas.com/truenas-scale/"
-      }
+      "google tasks"
     ],
-    "tier": "community",
-    "author": "CoreWorxLab",
+    "tier": "coreworxlab",
+    "author": "cmac86",
     "tags": [
-      "truenas",
-      "zfs",
-      "storage",
-      "pools",
-      "nas"
+      "productivity",
+      "google tasks"
     ],
-    "updated": "2026-01-19"
+    "updated": "2026-01-20"
   },
   {
     "id": "q4Ib8fi2X__AxW72u3C4Uw",

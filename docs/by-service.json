@@ -45,37 +45,28 @@
       "updated": "2026-01-19"
     }
   ],
-  "[object Object]": [
+  "google tasks": [
     {
-      "id": null,
-      "name": "truenas_get_pool_status",
+      "id": "unNGy4Z4eRfgicmlcgbvDg",
+      "name": "google-tasks-add-task",
       "version": "1.0.0",
-      "description": "Get detailed ZFS pool status including health, capacity, and usage percentage for all pools",
-      "category": "homelab",
-      "path": "tools/homelab/truenas-get-pool-status",
+      "description": "Adds a task to Google Tasks with optional notes and due date.",
+      "category": "productivity",
+      "path": "tools/productivity/google-tasks-add-task",
       "voice_triggers": [
-        "check my TrueNAS pools",
-        "what's the status of my storage pools",
-        "how full are my ZFS pools",
-        "is my TrueNAS healthy",
-        "check storage capacity"
+        "Add task buy groceries",
+        "Remind me to submit the report by Friday"
       ],
       "required_services": [
-        {
-          "name": "TrueNAS SCALE",
-          "url": "https://www.truenas.com/truenas-scale/"
-        }
+        "google tasks"
       ],
-      "tier": "community",
-      "author": "CoreWorxLab",
+      "tier": "coreworxlab",
+      "author": "cmac86",
       "tags": [
-        "truenas",
-        "zfs",
-        "storage",
-        "pools",
-        "nas"
+        "productivity",
+        "google tasks"
       ],
-      "updated": "2026-01-19"
+      "updated": "2026-01-20"
     }
   ]
 }
