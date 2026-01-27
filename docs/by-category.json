@@ -95,6 +95,27 @@
         "sports"
       ],
       "updated": "2026-01-26"
+    },
+    {
+      "id": "276uXOHHbo4JrrWs6-v6CA",
+      "name": "espn-mls",
+      "friendlyName": "ESPN MLS",
+      "version": "1.0.0",
+      "description": "Get MLS scores, schedules, and standings with optional team and conference filtering.",
+      "category": "sports",
+      "path": "tools/sports/espn-mls",
+      "icon": "mls.svg",
+      "voice_triggers": [
+        "What are the MLS scores?",
+        "When do the Sounders play next?"
+      ],
+      "required_services": [],
+      "tier": "coreworxlab",
+      "author": "cmac86",
+      "tags": [
+        "sports"
+      ],
+      "updated": "2026-01-26"
     }
   ],
   "utilities": []
