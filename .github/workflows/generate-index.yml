@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'tools/**'
+      - 'scripts/generate-index.js'
+  workflow_dispatch:
 
 jobs:
   generate-index:

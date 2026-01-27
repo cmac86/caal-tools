@@ -3,10 +3,12 @@
     {
       "id": "JLBpNNUkMXzOZDojN3VdrA",
       "name": "google-tasks",
+      "friendlyName": "Google Tasks",
       "version": "1.0.0",
       "description": "Manage Google Tasks - get, add, complete, and delete tasks with optional due dates and notes.",
       "category": "productivity",
       "path": "tools/productivity/google-tasks",
+      "icon": "google-tasks.svg",
       "voice_triggers": [
         "What's on my task list?",
         "Add task buy groceries"
@@ -27,10 +29,12 @@
     {
       "id": "Wv9iVQRT_j_fyCeMWcz_xA",
       "name": "notion-tasks",
+      "friendlyName": "Notion Tasks",
       "version": "1.0.0",
       "description": "Manage tasks in Notion - get, add, complete, and delete tasks with support for due dates and filtering.",
       "category": "productivity",
       "path": "tools/productivity/notion-tasks",
+      "icon": "notion.svg",
       "voice_triggers": [
         "What's on my Notion task list?",
         "Add task buy groceries due Friday"
