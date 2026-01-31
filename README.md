@@ -1,6 +1,6 @@
 # CAAL Tool Registry
 
-Community-driven voice tools for [CAAL](https://github.com/CoreWorxLab/caal) - the voice assistant that actually does things.
+Community-driven voice tools for [CAAL](https://github.com/CoreWorxLab/caal) - the voice assistant that actually does things. Part of the [CAAL Tool API](https://github.com/CoreWorxLab/caal/wiki/CAAL-Tool-API).
 
 ---
 

@@ -1,6 +1,6 @@
 # Contributing to CAAL Tool Registry
 
-Thanks for contributing! This registry grows through community submissions.
+Thanks for contributing! This registry grows through community submissions. For the full architecture and tool spec, see the [CAAL Tool API](https://github.com/CoreWorxLab/caal/wiki/CAAL-Tool-API).
 
 ## Submitting a Tool
 
