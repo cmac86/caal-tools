@@ -102,6 +102,30 @@
       "updated": "2026-01-29"
     },
     {
+      "id": "ndPj-EJI58ABJvg0drlAgw",
+      "name": "google-calendar",
+      "friendlyName": "Google Calendar",
+      "version": "1.0.0",
+      "description": "Manage Google Calendar events - view, create, and delete events with support for timed and all-day events.",
+      "category": "productivity",
+      "path": "tools/productivity/google-calendar",
+      "icon": "google-calendar.svg",
+      "voice_triggers": [
+        "What's on my calendar today?",
+        "Add dentist appointment tomorrow at 2pm"
+      ],
+      "required_services": [
+        "google calendar"
+      ],
+      "tier": "coreworxlab",
+      "author": "cmac86",
+      "tags": [
+        "productivity",
+        "google calendar"
+      ],
+      "updated": "2026-02-01"
+    },
+    {
       "id": "IugRPxb-3ekQ0b-Bfpx6wA",
       "name": "google-contacts",
       "friendlyName": "Google Contacts",
