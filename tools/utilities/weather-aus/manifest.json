@@ -1,7 +1,7 @@
 {
   "id": "mXoo792Qi9j8e5rzW3kZiw",
   "name": "weather-aus",
-  "friendlyName": "Australian Weather",
+  "friendlyName": "Weather Australia",
   "version": "1.0.0",
   "description": "Get Australian weather forecasts or current conditions for any city, suburb, or postcode.",
   "category": "utilities",
