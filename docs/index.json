@@ -294,6 +294,30 @@
     "updated": "2026-01-29"
   },
   {
+    "id": "aQ8KoJ2Nc2Z8ftAqlp5S-w",
+    "name": "truenas",
+    "friendlyName": "TrueNAS",
+    "version": "1.0.0",
+    "description": "Manage TrueNAS system status and control apps - check system health, resources, and storage pools, or start, stop, and restart applications.",
+    "category": "homelab",
+    "path": "tools/homelab/truenas",
+    "icon": "truenas.svg",
+    "voice_triggers": [
+      "What's my TrueNAS status?",
+      "Check my NAS"
+    ],
+    "required_services": [
+      "truenas"
+    ],
+    "tier": "coreworxlab",
+    "author": "cmac86",
+    "tags": [
+      "homelab",
+      "truenas"
+    ],
+    "updated": "2026-02-01"
+  },
+  {
     "id": "mXoo792Qi9j8e5rzW3kZiw",
     "name": "weather-aus",
     "friendlyName": "Weather Australia",
