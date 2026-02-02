@@ -14,7 +14,8 @@
   "icon": "x.svg",
   "voice_triggers": [
     "Post a tweet saying hello world",
-    "Send a direct message to someone on Twitter"
+    "Think of a joke and DM it to AbShahzeb on X",
+    "What is @elonmusk's display name on X"
   ],
   "required_services": [
     "x (twitter)"

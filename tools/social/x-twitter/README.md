@@ -1,11 +1,12 @@
 # x-twitter
 
-Post tweets, send direct messages, and search for X users. Requires X Developer account with credit balance for API usage.
+Post tweets, send direct messages, and search for X users. Requires [X Developer account](https://console.x.com/) with credit balance (PAYG) for API usage.
 
 ## Voice Triggers
 
 - "Hey Cal, Post a tweet saying hello world"
-- "Hey Cal, Send a direct message to someone on Twitter"
+- "Hey Cal, Think of a joke and DM it to AbShahzeb on X"
+- "Hey Cal, What is @elonmusk's display name on X"
 
 ## Required Services
 
@@ -14,6 +15,17 @@ x (twitter)
 ## Setup
 
 No environment variables required.
+
+### Creating OAuth2 App using X Developer Console
+
+1. Sign in to [X Developer Console](https://console.x.com/)
+2. Create a new App. Use any application name, and select `Development` Environment.
+3. Click on the newly created App and set up User authentication settings:
+  ![X OAuth2 Setup](x_setup_oauth2.png)
+4. Under `Type of App`, select `Web App, Automated App or Bot`. This enables OAuth2.
+5. Copy the `Callback URI / Redirect URL` from n8n and paste it into the `Redirect URL` field.
+6. Paste any valid URL into the `Website URL` field (e.g., `https://github.com`).
+7. Copy the `Client ID` and `Client Secret` when prompted and paste it into the n8n credentials setup.
 
 ### n8n Credentials
 
