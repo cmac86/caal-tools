@@ -23,7 +23,8 @@ No environment variables required.
 3. Click on the newly created App and set up User authentication settings:
   ![X OAuth2 Setup](x_setup_oauth2.png)
 4. Under `Type of App`, select `Web App, Automated App or Bot`. This enables OAuth2.
-5. Copy the `Callback URI / Redirect URL` from n8n and paste it into the `Redirect URL` field.
+5. Copy the `Callback URI / Redirect URL` from n8n and paste it into the `Redirect URL` field:
+  ![Type of App](x_type_of_app.png)
 6. Paste any valid URL into the `Website URL` field (e.g., `https://github.com`).
 7. Copy the `Client ID` and `Client Secret` when prompted and paste it into the n8n credentials setup.
 
