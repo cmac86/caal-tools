@@ -206,5 +206,38 @@
       ],
       "updated": "2026-01-27"
     }
+  ],
+  "x (twitter)": [
+    {
+      "id": "wn9K89sz3bAItFVWpvzkhQ",
+      "name": "x-twitter",
+      "friendlyName": "X (Twitter)",
+      "version": "2.0.0",
+      "description": "X (Twitter) automation: post tweets, like/retweet/delete, send DMs, lookup users with connection status and full metrics, mute users, and view blocked accounts. Requires X Developer account with API access.",
+      "category": "social",
+      "path": "tools/social/x-twitter",
+      "icon": "x.svg",
+      "voice_triggers": [
+        "Post a tweet saying hello world",
+        "How many followers does Elon Musk have?",
+        "Send a DM to AbShahzeb saying great work",
+        "Does Sam Altman follow me on X?",
+        "Mute the user @spambot123 on X",
+        "Like the tweet with ID 1234567890",
+        "Show me who I've blocked"
+      ],
+      "required_services": [
+        "x (twitter)"
+      ],
+      "tier": "community",
+      "author": "AbdulShahzeb",
+      "tags": [
+        "social",
+        "x (twitter)",
+        "automation",
+        "social media"
+      ],
+      "updated": "2026-02-04"
+    }
   ]
 }
