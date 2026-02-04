@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 
 /**
- * Ensure Registry ID - Auto-adds registry IDs to tools submitted via manual PRs
+ * Ensure Registry ID - Auto-adds registry IDs and tracking stickies to tools
+ *
+ * Runs on push to main (after merge). Two independent checks:
+ * 1. Missing registry ID in manifest.json → generate and add
+ * 2. Missing tracking sticky in workflow.json → add (even if ID already exists)
  *
  * Usage:
- *   node ensure-registry-id.js                    # Scan all tools (for backfill)
- *   node ensure-registry-id.js --changed "file1 file2"  # Only check specific changed files
- *
- * For any tool missing an id in manifest.json:
- * 1. Generates a new registry ID
- * 2. Adds it to manifest.json
- * 3. Adds CAAL registry tracking sticky note to workflow.json
+ *   node ensure-registry-id.js                          # Scan all tools (backfill)
+ *   node ensure-registry-id.js --changed "file1 file2"  # Only check changed files
  */
 
 const fs = require('fs');
@@ -20,7 +19,6 @@ const crypto = require('crypto');
 const toolsDir = './tools';
 
 function generateRegistryId() {
-  // Generate URL-safe base64 ID (~22 chars, similar to nanoid)
   return crypto.randomBytes(16).toString('base64url');
 }
 
@@ -50,7 +48,7 @@ function createRegistryStickyNote(registryId, version, toolName, description, ca
     position: [-784, -288],
     typeVersion: 1,
     id: generateUUID(),
-    name: 'Sticky Note',
+    name: 'Registry Tracking',
   };
 }
 
@@ -71,44 +69,39 @@ function processToolDirectory(toolPath) {
     return false;
   }
 
-  // Check if ID already exists
-  if (manifest.id) {
-    console.log(`  ${manifest.name} - already has ID: ${manifest.id}`);
-    return false;
-  }
-
-  // Generate new ID
-  const newId = generateRegistryId();
-  const version = manifest.version || '1.0.0';
-
-  // Extract category from path (e.g., "tools/homelab/my-tool" -> "homelab")
   const pathParts = toolPath.split(path.sep);
   const category = pathParts[pathParts.indexOf('tools') + 1] || 'other';
   const toolName = manifest.name || pathParts[pathParts.length - 1];
 
-  console.log(`  ${toolName} - adding ID: ${newId}`);
+  let changed = false;
 
-  // Update manifest
-  manifest.id = newId;
-  if (!manifest.version) {
-    manifest.version = version;
+  // Check 1: Missing registry ID
+  if (!manifest.id) {
+    const newId = generateRegistryId();
+    manifest.id = newId;
+    if (!manifest.version) {
+      manifest.version = '1.0.0';
+    }
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+    console.log(`  ${toolName} - added registry ID: ${newId}`);
+    changed = true;
   }
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 
-  // Update workflow if it exists - add sticky note for registry tracking
-  if (fs.existsSync(workflowPath)) {
+  // Check 2: Missing tracking sticky (independent of ID check)
+  if (manifest.id && fs.existsSync(workflowPath)) {
     try {
       const workflow = JSON.parse(fs.readFileSync(workflowPath, 'utf8'));
 
-      // Check if sticky note already exists
       const hasSticky = workflow.nodes?.some(
-        (n) => n.type === 'n8n-nodes-base.stickyNote' && n.parameters?.content?.includes('CAAL Registry Tracking')
+        (n) =>
+          n.type === 'n8n-nodes-base.stickyNote' &&
+          n.parameters?.content?.includes('CAAL Registry Tracking')
       );
 
       if (!hasSticky) {
         const stickyNote = createRegistryStickyNote(
-          newId,
-          version,
+          manifest.id,
+          manifest.version || '1.0.0',
           toolName,
           manifest.description || '',
           category
@@ -120,14 +113,19 @@ function processToolDirectory(toolPath) {
         workflow.nodes.push(stickyNote);
 
         fs.writeFileSync(workflowPath, JSON.stringify(workflow, null, 2) + '\n');
-        console.log(`    Added registry tracking sticky note to workflow.json`);
+        console.log(`  ${toolName} - added registry tracking sticky note`);
+        changed = true;
       }
     } catch (e) {
-      console.warn(`    Could not update workflow.json: ${e.message}`);
+      console.warn(`  Could not update workflow.json: ${e.message}`);
     }
   }
 
-  return true;
+  if (!changed) {
+    console.log(`  ${toolName} - OK (id: ${manifest.id})`);
+  }
+
+  return changed;
 }
 
 // Parse arguments
@@ -135,21 +133,18 @@ const args = process.argv.slice(2);
 const changedIndex = args.indexOf('--changed');
 const changedFiles = changedIndex !== -1 ? args[changedIndex + 1] : null;
 
-console.log('Checking for missing registry IDs...\n');
+console.log('Checking for missing registry IDs and tracking stickies...\n');
 
 let updated = 0;
 
 if (changedFiles) {
-  // Only process specific changed files (efficient for PRs)
-  const files = changedFiles.split(/\s+/).filter(f => f.trim());
+  const files = changedFiles.split(/\s+/).filter((f) => f.trim());
 
   if (files.length === 0) {
-    console.log('No tool files changed in this PR.');
+    console.log('No tool files changed.');
   } else {
-    // Extract unique tool directories from changed file paths
     const toolDirs = new Set();
     for (const file of files) {
-      // e.g., "tools/homelab/my-tool/manifest.json" -> "tools/homelab/my-tool"
       const match = file.match(/^(tools\/[^/]+\/[^/]+)\//);
       if (match) {
         toolDirs.add(match[1]);
@@ -165,7 +160,6 @@ if (changedFiles) {
     }
   }
 } else {
-  // Full scan (for backfill or manual runs)
   const categories = fs.readdirSync(toolsDir);
   for (const category of categories) {
     const categoryPath = path.join(toolsDir, category);

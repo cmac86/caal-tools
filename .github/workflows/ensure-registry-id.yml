@@ -1,76 +1,35 @@
 name: Ensure Registry ID
 
 on:
-  pull_request:
+  push:
     branches: [main]
     paths:
       - 'tools/**'
 
 jobs:
   ensure-id:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Get changed files
+      - name: Get changed tool files
         id: changed
         run: |
-          changed=$(git diff --name-only origin/main...HEAD -- 'tools/')
+          changed=$(git diff --name-only HEAD~1 -- 'tools/')
           echo "files<<EOF" >> $GITHUB_OUTPUT
           echo "$changed" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Check for existing tools (updates)
-        id: check-existing
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          # Extract unique tool directories from changed files
-          tool_dirs=$(echo "${{ steps.changed.outputs.files }}" | grep -oE 'tools/[^/]+/[^/]+' | sort -u)
-
-          existing_tools=""
-          for tool_dir in $tool_dirs; do
-            # Check if manifest.json exists on main branch
-            if git show origin/main:$tool_dir/manifest.json &>/dev/null; then
-              tool_name=$(basename "$tool_dir")
-              existing_tools="$existing_tools $tool_name"
-            fi
-          done
-
-          if [ -n "$existing_tools" ]; then
-            echo "is_update=true" >> $GITHUB_OUTPUT
-            echo "tools=$existing_tools" >> $GITHUB_OUTPUT
-            echo "::notice::This PR updates existing tool(s):$existing_tools"
-
-            # Add label to PR
-            gh pr edit ${{ github.event.pull_request.number }} --add-label "tool-update" || true
-
-            # Add comment to PR
-            gh pr comment ${{ github.event.pull_request.number }} --body "⚠️ **Tool Update Detected**
-
-This PR modifies existing tool(s):$existing_tools
-
-Please verify:
-- [ ] Version has been incremented in manifest.json
-- [ ] Changes are backwards compatible or documented
-- [ ] Original author is aware (if different submitter)"
-          else
-            echo "is_update=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Check and add registry IDs
+      - name: Ensure registry IDs and tracking
         run: node scripts/ensure-registry-id.js --changed "${{ steps.changed.outputs.files }}"
 
       - name: Commit if changed
@@ -79,6 +38,6 @@ Please verify:
           git config --local user.name "github-actions[bot]"
           git add tools/
           if ! git diff --staged --quiet; then
-            git commit -m "chore: add missing registry IDs"
+            git commit -m "chore: ensure registry tracking [skip ci]"
             git push
           fi
