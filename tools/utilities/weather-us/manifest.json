@@ -10,7 +10,7 @@
     "forecast",
     "current"
   ],
-  "icon": "flag-usa.svg",
+  "icon": "us-weather-icon.svg",
   "voice_triggers": [
     "What's the weather in Chicago?",
     "Austin forecast for next week",
