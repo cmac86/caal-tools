@@ -440,6 +440,21 @@
         400
       ],
       "id": "respond-paperless"
+    },
+    {
+      "parameters": {
+        "content": "## CAAL Registry Tracking\n**Tool Name:** paperless-ngx\n**Description:** Manage documents, search archives, and update metadata in Paperless-ngx document management system.\n**version:** v1.0.0\n**id:** paperless-ngx-suite\n**link:** [Registry](https://github.com/CoreWorxLab/caal-tools/tree/main/tools/productivity/paperless-ngx)\n\n### (Do not delete this sticky)",
+        "height": 260,
+        "width": 360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "6758a56c-3009-461c-9e75-6fa6539d7742",
+      "name": "Registry Tracking"
     }
   ],
   "connections": {
