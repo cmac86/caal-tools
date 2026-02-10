@@ -30,10 +30,10 @@
 - [ ] No hardcoded API keys or secrets
 - [ ] No user-specific URLs (using variables instead)
 - [ ] Error responses are voice-friendly
+- [ ] HTTP error outputs wired to Format Error node
 - [ ] Tested locally and working
 - [ ] README includes example response
 - [ ] `manifest.json` has at least 2 voice triggers
-- [ ] Ran `node scripts/validate.js` locally
 
 ### Testing Notes
 

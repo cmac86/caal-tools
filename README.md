@@ -31,16 +31,13 @@ This registry contains **voice-first n8n workflows** that extend CAAL's capabili
 
 ## Install a Tool
 
-### Quick Install
+### From the CAAL Frontend (Recommended)
 
-```bash
-curl -s https://raw.githubusercontent.com/CoreWorxLab/caal-tools/main/scripts/install.sh | bash -s <tool-name>
-```
-
-Example:
-```bash
-curl -s https://raw.githubusercontent.com/CoreWorxLab/caal-tools/main/scripts/install.sh | bash -s truenas-get-status
-```
+1. Open your CAAL web interface
+2. Browse the Tool Registry
+3. Click **Install** on any tool
+4. Follow the setup prompts (credentials, service URLs)
+5. CAAL auto-refreshes — start using your new tool immediately
 
 ### Manual Install
 
