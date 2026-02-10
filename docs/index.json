@@ -246,6 +246,36 @@
     "updated": "2026-01-27"
   },
   {
+    "id": "Aenyv1PlVgcKGrjn44HfBA",
+    "name": "paperless-ngx",
+    "friendlyName": "Paperless-ngx",
+    "version": "1.0.0",
+    "description": "Manage documents, search archives, and update metadata in Paperless-ngx document management system.",
+    "category": "productivity",
+    "path": "tools/productivity/paperless-ngx",
+    "icon": "paperless.svg",
+    "voice_triggers": [
+      "Search paperless for tax documents",
+      "Show me recent documents in paperless",
+      "Get document 123 from paperless",
+      "Update document 456 with tag invoice",
+      "List all tags in paperless",
+      "Show documents from correspondent John Doe"
+    ],
+    "required_services": [
+      "paperless-ngx"
+    ],
+    "tier": "coreworxlab",
+    "author": "JdCpuWiz",
+    "tags": [
+      "productivity",
+      "documents",
+      "archive",
+      "paperless"
+    ],
+    "updated": "2026-02-09"
+  },
+  {
     "id": "9fGeS8i9FH-7OHxAHAYB1A",
     "name": "radarr",
     "friendlyName": "Radarr",
@@ -379,6 +409,36 @@
       "utilities"
     ],
     "updated": "2026-02-07"
+  },
+  {
+    "id": "Vu_piQqVkzsigLm2Ia6quQ",
+    "name": "weather-us",
+    "friendlyName": "Weather USA",
+    "version": "1.0.0",
+    "description": "Gets weather forecasts and current conditions for US cities using NOAA Weather.gov official data. Supports voice queries with automatic location geocoding via OpenStreetMap Nominatim.",
+    "category": "utilities",
+    "path": "tools/utilities/weather-us",
+    "icon": "us-weather-icon.svg",
+    "voice_triggers": [
+      "What's the weather in Chicago?",
+      "Austin forecast for next week",
+      "What's the current weather in Seattle?",
+      "Portland weather tomorrow",
+      "Miami forecast for Wednesday"
+    ],
+    "required_services": [],
+    "tier": "community",
+    "author": "JdCpuWiz",
+    "tags": [
+      "weather",
+      "utilities",
+      "us",
+      "noaa",
+      "forecast",
+      "geocoding",
+      "voice"
+    ],
+    "updated": "2026-02-09"
   },
   {
     "id": "wn9K89sz3bAItFVWpvzkhQ",

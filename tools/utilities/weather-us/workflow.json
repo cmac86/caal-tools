@@ -422,6 +422,19 @@
     },
     {
       "parameters": {
+        "jsCode": "const errorData = $input.item.json;\nlet errorMsg = errorData.message || errorData.error || 'Unknown error';\n\nif (errorMsg.includes('ECONNREFUSED') || errorMsg.includes('ETIMEDOUT')) {\n  errorMsg = 'Cannot reach the weather service right now.';\n} else if (errorMsg.includes('500') || errorMsg.includes('503')) {\n  errorMsg = 'The weather service is temporarily unavailable.';\n}\n\nreturn [{ json: { message: `Sorry, there was an error. ${errorMsg}`, error: true } }];"
+      },
+      "name": "Format HTTP Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        800
+      ],
+      "id": "weather-format-http-error-001"
+    },
+    {
+      "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json }}",
         "options": {}
@@ -437,7 +450,7 @@
     },
     {
       "parameters": {
-        "content": "## CAAL Registry Tracking\n**Tool Name:** weather-us\n**Description:** Gets weather forecasts and current conditions for US cities using NOAA Weather.gov official data.\n**version:** v1.0.0\n**id:** weather_us_noaa_v1\n**link:** TBD - Register at https://github.com/CoreWorxLab/caal-tools\n\n### How it works\n1. Receives city/state location name\n2. Geocodes location to lat/lon\n3. Calls weather.gov /points API\n4. Retrieves forecast or current conditions\n5. Returns brief voice-friendly response\n\n### (Do not delete this sticky)",
+        "content": "## CAAL Registry Tracking\n**Tool Name:** weather-us\n**Description:** Gets weather forecasts and current conditions for US cities using NOAA Weather.gov official data.\n**version:** v1.0.0\n**id:** Vu_piQqVkzsigLm2Ia6quQ\n**link:** [Registry](https://github.com/CoreWorxLab/caal-tools/tree/main/tools/utilities/weather-us)\n\n### How it works\n1. Receives city/state location name\n2. Geocodes location to lat/lon\n3. Calls weather.gov /points API\n4. Retrieves forecast or current conditions\n5. Returns brief voice-friendly response\n\n### (Do not delete this sticky)",
         "height": 320,
         "width": 360
       },
@@ -482,6 +495,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Format HTTP Error",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -519,6 +539,13 @@
         [
           {
             "node": "Extract Points Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format HTTP Error",
             "type": "main",
             "index": 0
           }
@@ -587,6 +614,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Format HTTP Error",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -595,6 +629,13 @@
         [
           {
             "node": "Extract Station",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format HTTP Error",
             "type": "main",
             "index": 0
           }
@@ -631,6 +672,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Format HTTP Error",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -646,6 +694,17 @@
       ]
     },
     "Format Unknown Action": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format HTTP Error": {
       "main": [
         [
           {

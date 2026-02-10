@@ -207,6 +207,38 @@
       "updated": "2026-01-27"
     }
   ],
+  "paperless-ngx": [
+    {
+      "id": "Aenyv1PlVgcKGrjn44HfBA",
+      "name": "paperless-ngx",
+      "friendlyName": "Paperless-ngx",
+      "version": "1.0.0",
+      "description": "Manage documents, search archives, and update metadata in Paperless-ngx document management system.",
+      "category": "productivity",
+      "path": "tools/productivity/paperless-ngx",
+      "icon": "paperless.svg",
+      "voice_triggers": [
+        "Search paperless for tax documents",
+        "Show me recent documents in paperless",
+        "Get document 123 from paperless",
+        "Update document 456 with tag invoice",
+        "List all tags in paperless",
+        "Show documents from correspondent John Doe"
+      ],
+      "required_services": [
+        "paperless-ngx"
+      ],
+      "tier": "coreworxlab",
+      "author": "JdCpuWiz",
+      "tags": [
+        "productivity",
+        "documents",
+        "archive",
+        "paperless"
+      ],
+      "updated": "2026-02-09"
+    }
+  ],
   "x (twitter)": [
     {
       "id": "wn9K89sz3bAItFVWpvzkhQ",

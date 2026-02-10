@@ -202,6 +202,7 @@
       "name": "Search Documents",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
+      "onError": "continueErrorOutput",
       "position": [
         -200,
         200
@@ -242,6 +243,7 @@
       "name": "Get Documents",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
+      "onError": "continueErrorOutput",
       "position": [
         -200,
         300
@@ -268,6 +270,7 @@
       "name": "Update Document",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
+      "onError": "continueErrorOutput",
       "position": [
         -200,
         400
@@ -291,6 +294,7 @@
       "name": "Get Tags",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
+      "onError": "continueErrorOutput",
       "position": [
         -200,
         500
@@ -314,6 +318,7 @@
       "name": "Get Correspondents",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
+      "onError": "continueErrorOutput",
       "position": [
         -200,
         600
@@ -337,6 +342,7 @@
       "name": "Get Types",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
+      "onError": "continueErrorOutput",
       "position": [
         -200,
         700
@@ -429,6 +435,32 @@
     },
     {
       "parameters": {
+        "jsCode": "const action = $input.item.json.action || 'unknown';\nreturn [{ json: { message: `Sorry, I don't know how to handle the \"${action}\" action for Paperless.`, error: true } }];"
+      },
+      "name": "Format Unknown Action",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1000
+      ],
+      "id": "format-unknown-action-paperless"
+    },
+    {
+      "parameters": {
+        "jsCode": "const errorData = $input.item.json;\nlet errorMsg = errorData.message || errorData.error || 'Unknown error';\n\nif (errorMsg.includes('401') || errorMsg.includes('Unauthorized')) {\n  errorMsg = 'Authentication failed. Check the Paperless API key in n8n.';\n} else if (errorMsg.includes('ECONNREFUSED') || errorMsg.includes('ETIMEDOUT')) {\n  errorMsg = 'Cannot connect to Paperless. Is it running?';\n} else if (errorMsg.includes('Credential')) {\n  errorMsg = 'Credentials not found in n8n.';\n} else if (errorMsg.includes('404')) {\n  errorMsg = 'Document not found.';\n}\n\nreturn [{ json: { message: `Sorry, there was an error. ${errorMsg}`, error: true } }];"
+      },
+      "name": "Format Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        900
+      ],
+      "id": "format-error-paperless"
+    },
+    {
+      "parameters": {
         "respondWith": "json",
         "responseBody": "={{ $json }}"
       },
@@ -443,7 +475,7 @@
     },
     {
       "parameters": {
-        "content": "## CAAL Registry Tracking\n**Tool Name:** paperless-ngx\n**Description:** Manage documents, search archives, and update metadata in Paperless-ngx document management system.\n**version:** v1.0.0\n**id:** paperless-ngx-suite\n**link:** [Registry](https://github.com/CoreWorxLab/caal-tools/tree/main/tools/productivity/paperless-ngx)\n\n### (Do not delete this sticky)",
+        "content": "## CAAL Registry Tracking\n**Tool Name:** paperless-ngx\n**Description:** Manage documents, search archives, and update metadata in Paperless-ngx document management system.\n**version:** v1.0.0\n**id:** Aenyv1PlVgcKGrjn44HfBA\n**link:** [Registry](https://github.com/CoreWorxLab/caal-tools/tree/main/tools/productivity/paperless-ngx)\n\n### (Do not delete this sticky)",
         "height": 260,
         "width": 360
       },
@@ -523,6 +555,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Format Unknown Action",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -531,6 +570,13 @@
         [
           {
             "node": "Format Search Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Error",
             "type": "main",
             "index": 0
           }
@@ -545,6 +591,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Format Error",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -553,6 +606,13 @@
         [
           {
             "node": "Format Update Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Error",
             "type": "main",
             "index": 0
           }
@@ -567,6 +627,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Format Error",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -578,6 +645,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Format Error",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -586,6 +660,13 @@
         [
           {
             "node": "Format Types Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Error",
             "type": "main",
             "index": 0
           }
@@ -648,6 +729,28 @@
       ]
     },
     "Format Types Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Error": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Unknown Action": {
       "main": [
         [
           {

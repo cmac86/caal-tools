@@ -1,5 +1,5 @@
 {
-  "id": "weather_us_noaa_v1_2026",
+  "id": "Vu_piQqVkzsigLm2Ia6quQ",
   "name": "weather-us",
   "friendlyName": "Weather USA",
   "version": "1.0.0",
@@ -18,24 +18,11 @@
     "Portland weather tomorrow",
     "Miami forecast for Wednesday"
   ],
-  "required_services": [
-    {
-      "name": "NOAA Weather.gov API",
-      "type": "external",
-      "cost": "free",
-      "auth": "none"
-    },
-    {
-      "name": "OpenStreetMap Nominatim",
-      "type": "external",
-      "cost": "free",
-      "auth": "none"
-    }
-  ],
+  "required_services": [],
   "required_credentials": [],
   "required_variables": [],
   "author": {
-    "github": "shad"
+    "github": "JdCpuWiz"
   },
   "tier": "community",
   "tags": [
