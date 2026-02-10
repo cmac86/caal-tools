@@ -74,6 +74,30 @@
         "sonarr"
       ],
       "updated": "2026-01-29"
+    },
+    {
+      "id": "ymrWW0bBJCq_d-KSgbJFlw",
+      "name": "youtube",
+      "friendlyName": "YouTube",
+      "version": "1.0.0",
+      "description": "Manage YouTube with comprehensive search, channel/video information retrieval, subscription management, and video rating capabilities.",
+      "category": "media",
+      "path": "tools/media/youtube",
+      "icon": "youtube.svg",
+      "voice_triggers": [
+        "Search for Python tutorials on YouTube",
+        "How many subscribers does MrBeast have?"
+      ],
+      "required_services": [
+        "youtube"
+      ],
+      "tier": "community",
+      "author": "AbdulShahzeb",
+      "tags": [
+        "media",
+        "youtube"
+      ],
+      "updated": "2026-02-09"
     }
   ],
   "productivity": [
