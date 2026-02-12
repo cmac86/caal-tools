@@ -56,6 +56,10 @@ Community contributions are welcome! Your tools will be marked as "Community" ti
 3. **Handle ambiguity** - Multiple ways to ask for the same thing
 4. **Fail gracefully** - Error messages should be helpful, not technical
 
+## License
+
+By submitting a tool, you agree to the [CAAL Tool Registry License](LICENSE). In short: you keep full ownership of your tools, the registry is free for personal use, and third parties can't commercially exploit the community's work. See [LICENSE](LICENSE) for full terms.
+
 ## Questions?
 
 Open an issue with the "question" label or join the [CAAL Discord](https://discord.gg/caal).

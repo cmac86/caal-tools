@@ -1,0 +1,85 @@
+CAAL Tool Registry License v1.0
+
+Copyright (c) 2026 CoreWorxLab and Contributors
+
+1. Definitions
+
+"Registry" — The collective contents of the caal-tools repository, including
+all workflows, manifests, documentation, and index files.
+
+"Tool" — An individual workflow and its associated files (manifest, README,
+icon) contributed to the Registry.
+
+"Contributor" — The original author of a Tool, as identified in the Tool's
+manifest.
+
+"CAAL-Compatible System" — Any voice assistant or automation platform that
+integrates with the Registry for non-commercial, personal use.
+
+"Commercial Use" — Selling, licensing, or otherwise monetizing the Registry or
+its Tools as part of a product or service, including offering the Registry as a
+hosted service for paying customers.
+
+"CoreWorxLab" — The maintainer and operator of the CAAL project and the
+Registry.
+
+2. Grant of Rights
+
+Permission is granted, free of charge, to any person to:
+
+a. Use Tools from the Registry for personal, non-commercial purposes with any
+   CAAL-Compatible System.
+
+b. Modify Tools for personal use or to contribute improvements back to the
+   Registry.
+
+c. Share individual Tools with attribution to the original Contributor and
+   CoreWorxLab.
+
+3. Contributor Rights
+
+a. Contributors retain full ownership and rights to the Tools they submit.
+
+b. Contributors may use, modify, relicense, publish, or commercialize their own
+   Tools independently, without restriction.
+
+c. By submitting a Tool to the Registry, Contributors grant CoreWorxLab a
+   non-exclusive, perpetual, irrevocable license to:
+   - Distribute the Tool as part of the Registry
+   - Include the Tool in CoreWorxLab products and services
+   - Modify, adapt, or integrate the Tool as needed for CoreWorxLab's offerings
+
+d. This grant does not transfer ownership. Contributors can withdraw future
+   versions of their Tools from the Registry at any time, but CoreWorxLab
+   retains rights to versions already submitted.
+
+4. Restrictions on Third Parties
+
+a. No Commercial Use of the Registry by Third Parties. The Registry, in whole
+   or in substantial part, may not be used commercially by anyone other than
+   CoreWorxLab without prior written permission. This includes but is not
+   limited to:
+   - Bundling the Registry with a competing commercial product
+   - Offering the Registry as a hosted or managed service
+   - Reselling or sublicensing access to the Registry
+   - Forking the Registry to power a competing tool marketplace
+
+b. No Misrepresentation. The Registry or its Tools may not be presented as the
+   work of anyone other than the original Contributors and CoreWorxLab.
+
+c. Attribution Required. Any permitted use of the Registry or individual Tools
+   must include:
+   - Credit to the original Contributor (by GitHub username)
+   - Credit to CoreWorxLab as the Registry maintainer
+   - A link to the original Registry repository
+
+5. No Warranty
+
+THE REGISTRY AND ITS TOOLS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED. IN NO EVENT SHALL COREWORXLAB OR CONTRIBUTORS BE LIABLE FOR
+ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM USE OF THE REGISTRY.
+
+6. Commercial Licensing for Third Parties
+
+For third-party commercial use inquiries, contact CoreWorxLab at
+cmac@coreworxlab.com.

@@ -134,4 +134,4 @@ async def search_registry(query: str) -> list[dict]:
 
 ## License
 
-MIT - Build what you want, share what you can.
+[CAAL Tool Registry License v1.0](LICENSE) — Free for personal use. Contributors retain ownership of their tools. See [LICENSE](LICENSE) for full terms.
